@@ -1,0 +1,6 @@
+#devid=tigleym
+#devtitle=Micah Tigley
+#gameid=roguelike
+#gametitle=My First Rogue-like
+#version=0.1
+#icon=metadata/icon.png

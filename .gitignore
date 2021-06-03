@@ -1,2 +1,5 @@
 .DS_Store
 app/roguelike.code-workspace
+/exceptions/*.txt
+/logs/*.txt
+/builds/*

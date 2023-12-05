@@ -6,6 +6,21 @@ class Rect
     @y2 = y + h
   end
 
+  # Serialization
+  def serialize
+    {
+        x1: @x1, y1: @y1,
+        x2: @x2, y2: @y2,
+    }
+
+  end
+  def inspect
+      serialize.to_s
+  end
+  def to_s
+      serialize.to_s
+  end
+
   def x1
     @x1
   end

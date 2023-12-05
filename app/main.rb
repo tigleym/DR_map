@@ -3,21 +3,25 @@ require 'app/rect.rb'
 require 'app/tile.rb'
 
 def tick args
+  if args.state.tick_count == 0
+    init_game args
+  end
   tick_game args
 end
 
-def tick_game args
+def init_game args
   # setup defaults
   args.state.grid.padding = 100
   args.state.grid.size = 512
   args.state.map.tiles ||= []
   args.state.map.rooms ||= []
+  args.state.map.quads ||= []
   args.state.player.direction ||= 1
   args.state.player.current_quad ||= 0
 
-  border_x = args.state.grid.padding - TILE_SIZE
-  border_y = args.state.grid.padding - TILE_SIZE
-  border_size = args.state.grid.size + TILE_SIZE * 2
+  args.state.border_x = args.state.grid.padding - TILE_SIZE
+  args.state.border_y = args.state.grid.padding - TILE_SIZE
+  args.state.border_size = args.state.grid.size + TILE_SIZE * 2
 
   # render tiles
   # first let's create the map
@@ -110,7 +114,9 @@ def tick_game args
     #quad4
     args.state.map.quads << args.state.map.tiles.select { |t| (t.x >= 16 && t.x < 32) && t.y >= 16 }
   end
+end
 
+def tick_game args
   for tile in args.state.map.quads[args.state.player.current_quad] do
     if tile.passable
       args.outputs.sprites << tile_in_game(tile.x.mod(16), tile.y.mod(16), "sprites/tiles/floor_1.png")
@@ -211,12 +217,12 @@ def tick_game args
   end
 
   # render label stuff
-  args.outputs.labels << [border_x, border_y - 30, "Frame rate: #{args.gtk.current_framerate}"]
-  args.outputs.labels << [border_x, border_y - 10, "Current player location is: #{args.state.player.x}, #{args.state.player.y}"]
-  args.outputs.labels << [border_x + 500, border_y - 10, "Sprite count: #{args.sprites.size}"]
-  args.outputs.labels << [border_x + 500, border_y - 30, "Current Quad: #{args.state.player.current_quad}"]
-  args.outputs.labels << [border_x + 1000, border_y - 10, "# of Rooms: #{args.state.map.rooms.length}"]
-  args.outputs.labels << [border_x, border_y + 25 + border_size, args.state.info_message]
+  args.outputs.labels << [args.state.border_x, args.state.border_y - 30, "Frame rate: #{args.gtk.current_framerate}"]
+  args.outputs.labels << [args.state.border_x, args.state.border_y - 10, "Current player location is: #{args.state.player.x}, #{args.state.player.y}"]
+  args.outputs.labels << [args.state.border_x + 500, args.state.border_y - 10, "Sprite count: #{args.sprites.size}"]
+  args.outputs.labels << [args.state.border_x + 500, args.state.border_y - 30, "Current Quad: #{args.state.player.current_quad}"]
+  args.outputs.labels << [args.state.border_x + 1000, args.state.border_y - 10, "# of Rooms: #{args.state.map.rooms.length}"]
+  args.outputs.labels << [args.state.border_x, args.state.border_y + 25 + args.state.border_size, args.state.info_message]
 end
 
 def tile_in_game (x, y, sprite_path, flip = 1)

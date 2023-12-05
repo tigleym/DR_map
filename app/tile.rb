@@ -1,7 +1,23 @@
 class Tile
+  attr_reader :x, :y
   def initialize(x, y)
     @x = x
     @y = y
+  end
+
+  # Serialization
+  def serialize
+    {
+        x: @x, y: @y,
+        passable: @passable
+    }
+
+  end
+  def inspect
+      serialize.to_s
+  end
+  def to_s
+      serialize.to_s
   end
 
   def x
